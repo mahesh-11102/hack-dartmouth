@@ -1,8 +1,53 @@
 //this is js file
-const open = document.getElementById('open');
-const close = document.getElementById('close');
-const container = document.querySelector('.container')
+const btn = document.getElementById('btn-speak');
+const txtin = document.getElementById('text-input');
+const voiceList = document.getElementById('voiceList');
+const synth = window.speechSynthesis;
+let voices = [];
 
-open.addEventListener('click', () => container.classList.add('show-nav'));
+populateVoices();
 
-close.addEventListener('click', ()=> container.classList.remove('show-nav'));
+if (speechSynthesis !== undefined) {
+    speechSynthesis.onvoiceschanged = populateVoices;
+}
+
+btn.addEventListener('click', () => {
+    let toSpeak = new SpeechSynthesisUtterance(txtin.value);
+    let selectedVoiceName = voiceList.selectedOptions[0].getAttribute(
+        'data-name'
+    );
+    voices.forEach((voice) => {
+        if (voice.name === selectedVoiceName) {
+            toSpeak.voice = voice;
+        }
+    });
+    synth.speak(toSpeak);
+});
+
+function populateVoices() {
+    voices = synth.getVoices();
+    voiceList.innerHTML = '';
+    voices.forEach((voice) => {
+        let listItem = document.createElement('option');
+        listItem.textContent = voice.name;
+        listItem.setAttribute('data-lang', voice.lang);
+        listItem.setAttribute('data-name', voice.name);
+        voiceList.appendChild(listItem);
+    });
+}
+
+
+const hello = () => {
+    var song = document.getElementById('demo');
+    song.play();
+
+
+};
+
+
+const fello = () => {
+    var song = document.getElementById('demo');
+    song.pause();
+
+
+};
